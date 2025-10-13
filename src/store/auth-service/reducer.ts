@@ -2,7 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { getCurrentUser, login } from './actions';
 
-import { getCurrentUserOperation, loginOperation, pendingOperation, rejectedOperation } from './operations';
+import {
+	getCurrentUserOperation,
+	loginOperation,
+	logoutOperation,
+	pendingOperation,
+	rejectedOperation,
+} from './operations';
 
 import type { AuthState } from './interfaces';
 
@@ -16,7 +22,9 @@ const initialState: AuthState = {
 const authSlice = createSlice({
 	name: 'auth',
 	initialState,
-	reducers: {},
+	reducers: {
+		logout: logoutOperation,
+	},
 	extraReducers: builder => {
 		// login
 		builder.addCase(login.pending, pendingOperation);
@@ -29,4 +37,5 @@ const authSlice = createSlice({
 	},
 });
 
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

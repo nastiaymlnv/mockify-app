@@ -22,3 +22,12 @@ export const getCurrentUserOperation = (state: AuthState, { payload }: PayloadAc
 	state.user = payload;
 	state.isLoading = false;
 };
+
+export const logoutOperation = (state: AuthState) => {
+	state.user = null;
+	state.isAuth = false;
+
+	localStorage.removeItem('token');
+	localStorage.removeItem('user');
+	localStorage.removeItem('cart');
+};
