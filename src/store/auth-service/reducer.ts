@@ -16,7 +16,6 @@ const initialState: AuthState = {
 	user: null,
 	isAuth: !!localStorage.getItem('token'),
 	isLoading: false,
-	error: '',
 };
 
 const authSlice = createSlice({

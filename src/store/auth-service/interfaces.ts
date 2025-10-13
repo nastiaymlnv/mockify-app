@@ -4,7 +4,6 @@ export interface AuthState {
 	user: User | null;
 	isAuth: boolean;
 	isLoading: boolean;
-	error: string;
 }
 
 export interface UserLoginDto {
