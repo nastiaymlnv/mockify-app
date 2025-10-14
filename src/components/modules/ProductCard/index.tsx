@@ -6,9 +6,10 @@ import { currencyName, currencySymbol } from '../../../constants/currency';
 
 interface ProductCardProps {
 	product: Product;
+	addToCart: () => void;
 }
 
-const ProductCard: FC<ProductCardProps> = ({ product }) => {
+const ProductCard: FC<ProductCardProps> = ({ product, addToCart }) => {
 	return (
 		<article className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group border border-gray-100">
 			<div className="relative aspect-square overflow-hidden bg-gray-100">
@@ -30,7 +31,7 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
 						</span>
 						<span className="text-xs text-gray-500">{currencyName}</span>
 					</div>
-					<button className="cursor-pointer px-4 py-2.5 rounded-lg font-medium transition-all flex items-center space-x-2 bg-emerald-600 text-white hover:bg-emerald-700 active:scale-95">
+					<button onClick={addToCart} className="cursor-pointer px-4 py-2.5 rounded-lg font-medium transition-all flex items-center space-x-2 bg-emerald-600 text-white hover:bg-emerald-700 active:scale-95">
 						Buy
 					</button>
 				</div>

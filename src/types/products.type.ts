@@ -12,3 +12,7 @@ export type ProductCategory = {
 	name: string;
 	slug: string;
 };
+
+export interface CartProduct extends Product {
+	quantity: number;
+}

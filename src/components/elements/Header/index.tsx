@@ -2,8 +2,9 @@ import { NavLink } from 'react-router-dom';
 
 import { ROUTES } from '../../../routes';
 
-import { useAppDispatch } from '../../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { logout } from '../../../store/auth-service/reducer';
+import { selectorGetTotalPrice } from '../../../store/cart-service/selectors';
 
 import Logo from '../Logo';
 
@@ -14,7 +15,7 @@ import { currencySymbol } from '../../../constants/currency';
 
 const Header = () => {
 	const dispatch = useAppDispatch();
-	const totalSum = 123; // TODO: change when logic is ready
+	const totalSum = useAppSelector(selectorGetTotalPrice);
 
 	const handleLogout = () => dispatch(logout());
 
@@ -35,7 +36,9 @@ const Header = () => {
 							<img src={Cart} alt="shopping cart" className="w-6 h-6" />
 							<div className="hidden sm:flex flex-col items-start">
 								<span className="text-xs text-gray-500">Cart</span>
-								<span className="text-sm font-bold">{`${currencySymbol}${totalSum.toFixed(2)}`}</span>
+								{totalSum > 0 && (
+									<span className="text-sm font-bold">{`${currencySymbol}${totalSum.toFixed(2)}`}</span>
+								)}
 							</div>
 						</NavLink>
 						<button

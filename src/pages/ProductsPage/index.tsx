@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
-	getProducts,
 	getProductByCategory,
+	getProducts,
 	getProductsCategories,
 	searchProducts,
 } from '../../store/products-service/actions';
 import { selectorGetProducts, selectorIsProductsLoading } from '../../store/products-service/selectors';
+import { addToCart } from '../../store/cart-service/actions';
 
 import { useListPagination } from '../../hooks/useListPagination';
 
@@ -15,7 +16,7 @@ import Pagination from '../../components/modules/Pagination';
 import ProductCard from '../../components/modules/ProductCard';
 import Filters from '../../components/templates/ProductsPage/Filters';
 
-import type { ProductCategory } from '../../types/products.type';
+import type { CartProduct, Product, ProductCategory } from '../../types/products.type';
 
 function ProductsPage() {
 	const dispatch = useAppDispatch();
@@ -86,6 +87,13 @@ function ProductsPage() {
 		goToPage(1);
 	};
 
+	const handleAddToCart = useCallback(
+		(product: Product) => {
+			dispatch(addToCart(product as CartProduct));
+		},
+		[dispatch]
+	);
+
 	return (
 		<article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[94dvh]">
 			<h1 className="text-4xl font-bold text-gray-900 mb-8">Products</h1>
@@ -111,7 +119,11 @@ function ProductsPage() {
 					) : (
 						<div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
 							{products.map(product => (
-								<ProductCard key={product.id} product={product} />
+								<ProductCard
+									key={product.id}
+									product={product}
+									addToCart={() => handleAddToCart(product)}
+								/>
 							))}
 						</div>
 					)}
