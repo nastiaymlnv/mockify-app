@@ -1,37 +1,103 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { getPaginatedProducts } from '../../store/products-service/actions';
-import { selectorIsProductsLoading, selectorGetPaginatedProducts } from '../../store/products-service/selectors';
+import {
+	getProducts,
+	getProductByCategory,
+	getProductsCategories,
+	searchProducts,
+} from '../../store/products-service/actions';
+import { selectorGetProducts, selectorIsProductsLoading } from '../../store/products-service/selectors';
 
 import { useListPagination } from '../../hooks/useListPagination';
 
-import ProductCard from '../../components/modules/ProductCard';
 import Pagination from '../../components/modules/Pagination';
+import ProductCard from '../../components/modules/ProductCard';
+import Filters from '../../components/templates/ProductsPage/Filters';
+
+import type { ProductCategory } from '../../types/products.type';
 
 function ProductsPage() {
 	const dispatch = useAppDispatch();
-	const { products, total } = useAppSelector(selectorGetPaginatedProducts);
+	const { products, total } = useAppSelector(selectorGetProducts);
 	const isProductsLoading = useAppSelector(selectorIsProductsLoading);
 	const { query, totalPages, currentPage, paginationRange, goToPage } = useListPagination(total);
 
-	const fetchProductsList = async () => {
-		try {
-			await dispatch(getPaginatedProducts(query));
-		} catch (error) {
-			console.error('Error fetching products:', error);
+	const [selectedCategory, setSelectedCategory] = useState<ProductCategory | undefined>();
+	const [searchText, setSearchText] = useState<string>('');
+
+	// Fetch categories once on mount
+	useEffect(() => {
+		dispatch(getProductsCategories())
+			.unwrap()
+			.catch(error => console.error('Error fetching categories:', error));
+	}, [dispatch]);
+
+	// Main data fetching effect with debounced search
+	useEffect(() => {
+		// Debounce the search
+		if (searchText) {
+			const timer = setTimeout(() => {
+				dispatch(searchProducts({ ...query, q: searchText }))
+					.unwrap()
+					.catch(error => console.error('Error searching products:', error));
+			}, 500);
+
+			return () => clearTimeout(timer);
 		}
+
+		// Non-search requests
+		const fetchProducts = async () => {
+			if (searchText) return;
+
+			try {
+				if (selectedCategory) {
+					await dispatch(
+						getProductByCategory({
+							category: selectedCategory.slug,
+							...query,
+						})
+					).unwrap();
+				} else {
+					await dispatch(getProducts(query)).unwrap();
+				}
+			} catch (error) {
+				console.error('Error fetching products:', error);
+			}
+		};
+
+		fetchProducts();
+	}, [dispatch, query.skip, selectedCategory?.slug, searchText]);
+
+	const handleSearchChange = (text: string) => {
+		// if try to search while some category is selected, clear the category (due to the api limits)
+		if (selectedCategory) setSelectedCategory(undefined);
+
+		setSearchText(text);
+		goToPage(1);
 	};
 
-	useEffect(() => {
-		fetchProductsList();
-	}, [query]);
+	const handleCategoryChange = (category: ProductCategory | undefined) => {
+		// if try to select category while the search field is not empty,
+		// clear the search text (due to the api limits)
+		if (searchText) setSearchText('');
+
+		setSelectedCategory(category);
+		goToPage(1);
+	};
 
 	return (
 		<article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[94dvh]">
 			<h1 className="text-4xl font-bold text-gray-900 mb-8">Products</h1>
 			<section className="min-h-[81.2dvh] grid grid-cols-1 lg:grid-cols-4 gap-6">
-				<div className="lg:col-span-1">Mocked filters block</div>
+				<div className="lg:col-span-1">
+					<Filters
+						searchText={searchText}
+						onSearchChange={handleSearchChange}
+						selectedCategory={selectedCategory}
+						onCategoryChange={handleCategoryChange}
+					/>
+				</div>
 				<div className="lg:col-span-3">
 					{/* If is loading, show the loader. If is empty, show the empty message, else the list */}
 					{isProductsLoading ? (

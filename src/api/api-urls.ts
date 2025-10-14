@@ -4,5 +4,8 @@ export const AUTH = {
 };
 
 export const PRODUCTS = {
-	GET_PAGINATED_PRODUCTS: (limit: number, skip: number = 0) => `/products?limit=${limit}&skip=${skip}`,
+	GET_PRODUCTS: `/products`,
+	GET_PRODUCTS_CATEGORIES: '/products/categories',
+	GET_PRODUCTS_BY_CATEGORY: (name: string) => `/products/category/${name}`,
+	SEARCH_PRODUCTS: '/products/search',
 };
