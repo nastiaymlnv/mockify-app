@@ -30,7 +30,7 @@ const ControlledInput = <T extends FieldValues = FieldValues>({
 			{...props}
 			render={({ field, fieldState: { error } }) => {
 				return (
-					<>
+					<div>
 						{label && (
 							<label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-2">
 								{label}
@@ -51,7 +51,7 @@ const ControlledInput = <T extends FieldValues = FieldValues>({
 							)}
 							{error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
 						</div>
-					</>
+					</div>
 				);
 			}}
 		/>

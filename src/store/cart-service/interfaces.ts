@@ -1,4 +1,6 @@
-import type { CartProduct } from "../../types/products.type";
+import type { DeliveryFormData } from '../../components/templates/CartPage/DeliveryForm/deliveryForm.config';
+
+import type { CartProduct } from '../../types/products.type';
 
 export interface CartState {
 	cart: CartProduct[];
@@ -9,4 +11,8 @@ export interface CartState {
 export interface CartActionResponse {
 	cart: CartProduct[];
 	totalPrice: number;
+}
+
+export interface PlaceOrderDto extends DeliveryFormData {
+	items: CartProduct[];
 }

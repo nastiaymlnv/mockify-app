@@ -35,3 +35,9 @@ export const changeCartProductQuantityOperation = (
 	state.cart = payload.cart;
 	state.totalPrice = payload.totalPrice;
 };
+
+export const placeOrderOperation = (state: CartState) => {
+	state.isLoading = false;
+	state.cart = [];
+	state.totalPrice = 0;
+};

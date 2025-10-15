@@ -27,3 +27,13 @@ export const saveToLocalStorage = (cart: Product[], totalPrice: number): void =>
 		throw error;
 	}
 };
+
+export const clearLocalStorageData = (): void => {
+	try {
+		localStorage.removeItem('cart');
+		localStorage.removeItem('cartPrice');
+	} catch (error) {
+		console.error('Failed to clear localStorage data:', error);
+		throw error;
+	}
+};

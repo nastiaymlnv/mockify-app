@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import type { CartState } from './interfaces';
-import { addToCart, changeCartProductQuantity, clearCart, removeFromCart } from './actions';
+import { addToCart, changeCartProductQuantity, clearCart, placeOrder, removeFromCart } from './actions';
 import {
 	addToCartOperation,
 	changeCartProductQuantityOperation,
 	clearCartOperation,
 	pendingOperation,
+	placeOrderOperation,
 	rejectedOperation,
 	removeFromCartOperation,
 } from './operations';
@@ -40,6 +41,10 @@ const cartSlice = createSlice({
 		builder.addCase(clearCart.pending, pendingOperation);
 		builder.addCase(clearCart.fulfilled, clearCartOperation);
 		builder.addCase(clearCart.rejected, rejectedOperation);
+		// place order
+		builder.addCase(placeOrder.pending, pendingOperation);
+		builder.addCase(placeOrder.fulfilled, placeOrderOperation);
+		builder.addCase(placeOrder.rejected, rejectedOperation);
 	},
 });
 

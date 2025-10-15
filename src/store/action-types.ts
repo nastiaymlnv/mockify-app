@@ -14,5 +14,6 @@ export enum CartActionType {
 	ADD_TO_CART = 'cartStore/addToCart',
 	REMOVE_FROM_CART = 'cartStore/removeFromCart',
 	CLEAR_CART = 'cartStore/clearCart',
-	CHANGE_PRODUCT_QUANTITY = 'carStore/changeProductQuantity'
+	CHANGE_PRODUCT_QUANTITY = 'cartStore/changeProductQuantity',
+	PLACE_ORDER = 'cartStore/placeOrder',
 }

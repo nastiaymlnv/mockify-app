@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { CartActionType } from '../action-types';
 
-import type { CartActionResponse, CartState } from './interfaces';
+import type { CartActionResponse, CartState, PlaceOrderDto } from './interfaces';
 import type { CartProduct } from '../../types/products.type';
 
-import { saveToLocalStorage } from '../../utils/localStorage-operations';
+import { clearLocalStorageData, saveToLocalStorage } from '../../utils/localStorage-operations';
 import { calculateTotalPrice } from '../../utils/cart-helpers';
+
+import { PRODUCTS } from '../../api/api-urls';
+import axiosInstance from '../../api/axios';
 
 export const addToCart = createAsyncThunk(
 	CartActionType.ADD_TO_CART,
@@ -67,12 +71,23 @@ export const changeCartProductQuantity = createAsyncThunk(
 );
 
 export const clearCart = createAsyncThunk(CartActionType.CLEAR_CART, async () => {
-	try {
-		localStorage.removeItem('cart');
-		localStorage.removeItem('cartPrice');
-	} catch (error) {
-		console.error('Failed to clear cart from localStorage:', error);
-	}
+	clearLocalStorageData();
 
 	return { cart: [], totalPrice: 0 };
+});
+
+export const placeOrder = createAsyncThunk<
+	{ message: string }, // fulfilled return type
+	PlaceOrderDto, // argument type
+	{ rejectValue: string } // thunk API config
+>(CartActionType.PLACE_ORDER, async (query: PlaceOrderDto, { rejectWithValue }) => {
+	try {
+		const { data } = await axiosInstance.post(PRODUCTS.PLACE_ORDER, query);
+
+		clearLocalStorageData();
+
+		return data;
+	} catch (error: any) {
+		return rejectWithValue(error.response?.data?.message || 'Failed to place order');
+	}
 });

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { changeCartProductQuantity, clearCart, removeFromCart } from '../../store/cart-service/actions';
+import { changeCartProductQuantity, clearCart, placeOrder, removeFromCart } from '../../store/cart-service/actions';
 import { selectorGetCartItems, selectorGetTotalPrice } from '../../store/cart-service/selectors';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 
@@ -10,7 +10,11 @@ import type { CartProduct } from '../../types/products.type';
 import { ROUTES } from '../../routes';
 
 import CartItemCard from '../../components/modules/CartItemCard';
+import DeliveryForm from '../../components/templates/CartPage/DeliveryForm';
+
 import { currencySymbol } from '../../constants/currency';
+
+import type { DeliveryFormData } from '../../components/templates/CartPage/DeliveryForm/deliveryForm.config';
 
 const CartPage = () => {
 	const cartItems = useAppSelector(selectorGetCartItems);
@@ -38,6 +42,16 @@ const CartPage = () => {
 
 	const handleClearCart = () => dispatch(clearCart());
 
+	const handleDeliverySubmit = async (data: DeliveryFormData) => {
+		try {
+			const response = await dispatch(placeOrder({ ...data, items: cartItems })).unwrap();
+			alert(response.message);
+		} catch (error) {
+			console.error('Error placing order:', error);
+			alert(error);
+		}
+	};
+
 	// Showing the empty state screen
 	if (!cartItems?.length) {
 		return (
@@ -60,6 +74,7 @@ const CartPage = () => {
 
 	return (
 		<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			{/* page title block */}
 			<div className="mb-6">
 				<button
 					onClick={navigateToProducts}
@@ -79,8 +94,10 @@ const CartPage = () => {
 					)}
 				</div>
 			</div>
+
 			<section className="grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-[75.2dvh]">
 				<div className="lg:col-span-2 space-y-6">
+					{/* section with added items */}
 					<section className="bg-white rounded-xl shadow-sm border border-gray-100 divide-y divide-gray-100">
 						{cartItems.map(item => (
 							<CartItemCard
@@ -91,15 +108,22 @@ const CartPage = () => {
 							/>
 						))}
 					</section>
-					<section className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-24">
-						<div className="flex justify-between items-center">
-							<h3 className="text-lg font-bold text-gray-900">
-								Total
-								<span className="text-gray-600 font-medium">{` (${totalItemsCount} ${totalItemsCount === 1 ? 'item' : 'items'})`}</span>
-							</h3>
-							<span className="text-2xl font-bold text-gray-900">{`${currencySymbol}${totalPrice.toFixed(2)}`}</span>
-						</div>
-					</section>
+				</div>
+				<div className="lg:col-span-1">
+					<div className="sticky top-24 space-y-6">
+						{/* order summary */}
+						<section className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+							<div className="flex justify-between items-center">
+								<h3 className="text-lg font-bold text-gray-900">
+									Total
+									<span className="text-gray-600 font-medium">{` (${totalItemsCount} ${totalItemsCount === 1 ? 'item' : 'items'})`}</span>
+								</h3>
+								<span className="text-2xl font-bold text-gray-900">{`${currencySymbol}${totalPrice.toFixed(2)}`}</span>
+							</div>
+						</section>
+						{/* delivery form */}
+						<DeliveryForm onSubmit={handleDeliverySubmit} />
+					</div>
 				</div>
 			</section>
 		</section>
