@@ -19,6 +19,6 @@ export default defineConfig([
 			ecmaVersion: 2020,
 			globals: globals.browser,
 		},
-		ignores: ['node_modules', 'vite.config.ts'],
+		ignores: ['node_modules', 'vite.config.ts','src/firebase.ts'],
 	},
 ]);

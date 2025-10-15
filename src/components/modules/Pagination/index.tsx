@@ -18,7 +18,7 @@ interface PaginationProps {
 
 const Pagination: FC<PaginationProps> = ({ currentPage, totalPages, totalItems, paginationRange, goToPage }) => {
 	const getPageNumbers = useMemo((): (number | string)[] => {
-		const pages = [];
+		const pages: (number | string)[] = [];
 
 		if (totalPages <= MAX_VISIBLE_PAGES) {
 			for (let i = 1; i <= totalPages; i++) {

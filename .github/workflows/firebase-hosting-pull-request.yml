@@ -4,18 +4,43 @@
 name: Deploy to Firebase Hosting on PR
 on: pull_request
 permissions:
-  checks: write
-  contents: read
-  pull-requests: write
+    checks: write
+    contents: read
+    pull-requests: write
 jobs:
-  build_and_preview:
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MOCKIFY_APP }}
-          projectId: mockify-app
+    build_and_preview:
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20' # Matches merge workflow
+                  cache: 'npm'
+
+            - name: Install dependencies
+              run: npm ci # Added: Ensures vite/node_modules available
+
+            - name: Run build
+              run: npm run build # Now succeeds with deps installed
+
+            - name: Deploy to Firebase Hosting
+              id: deploy
+              uses: FirebaseExtended/action-hosting-deploy@v0
+              with:
+                  repoToken: ${{ secrets.GITHUB_TOKEN }}
+                  firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MOCKIFY_APP }}
+                  projectId: mockify-app # Updated: Your actual project ID
+                  expires: 14d # Added: Preview expires after 14 days
+              env:
+                  FIREBASE_CLI_PREVIEWS: hostingchannels
+
+            # Added: Posts preview URL as PR comment
+            - name: Add comment with preview URL
+              uses: thollander/actions-comment-pull-request@v2
+              with:
+                  message: 'Preview deployed: ${{ steps.deploy.outputs.hosting_url }}'
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
