@@ -30,7 +30,7 @@ const Filters: FC<FiltersProps> = ({ searchText, onSearchChange, selectedCategor
 				{hasActiveFilters && (
 					<button
 						onClick={clearFilters}
-						className="cursor-pointer text-sm text-emerald-600 hover:text-emerald-700 font-medium flex items-center space-x-1"
+						className="cursor-pointer text-sm text-emerald-600 hover:text-emerald-700 font-medium space-x-1"
 					>
 						Clear
 					</button>

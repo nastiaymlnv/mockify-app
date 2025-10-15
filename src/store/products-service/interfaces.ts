@@ -1,3 +1,4 @@
+import type { BaseQueryType } from '../../types/base-query.type';
 import type { Product, ProductCategory } from '../../types/products.type';
 
 export interface ProductsState {
@@ -7,27 +8,20 @@ export interface ProductsState {
 	isLoading: boolean;
 }
 
-export interface getProductsDto {
-	limit: number;
-	skip: number;
-}
-
 export interface getProductsResponse {
 	total: number;
 	skip: number;
 	products: Product[];
 }
 
-export interface GetProductsByCategoryDto {
+export interface GetProductsByCategoryDto extends BaseQueryType {
 	category: string;
-	limit: number;
-	skip: number;
 }
 
 export interface GetProductsCategoriesResponse extends ProductCategory {
 	url: string;
 }
 
-export interface SearchProductsDto extends getProductsDto {
+export interface SearchProductsDto extends BaseQueryType {
 	q: string; // name of param in api
 }

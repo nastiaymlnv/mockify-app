@@ -14,5 +14,5 @@ export interface CartActionResponse {
 }
 
 export interface PlaceOrderDto extends DeliveryFormData {
-	items: CartProduct[];
+	items: { id: number; title: string; price: number; quantity: number }[];
 }

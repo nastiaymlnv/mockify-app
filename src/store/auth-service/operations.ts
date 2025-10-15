@@ -11,11 +11,9 @@ export const rejectedOperation = (state: AuthState) => {
 };
 
 export const loginOperation = (state: AuthState, { payload }: PayloadAction<UserLoginResponse>) => {
-	const { accessToken } = payload;
-	localStorage.setItem('token', accessToken);
-
 	state.isLoading = false;
 	state.isAuth = true;
+	state.user = payload;
 };
 
 export const getCurrentUserOperation = (state: AuthState, { payload }: PayloadAction<User>) => {
@@ -24,10 +22,7 @@ export const getCurrentUserOperation = (state: AuthState, { payload }: PayloadAc
 };
 
 export const logoutOperation = (state: AuthState) => {
+	state.isLoading = false;
 	state.user = null;
 	state.isAuth = false;
-
-	localStorage.removeItem('token');
-	localStorage.removeItem('user');
-	localStorage.removeItem('cart');
 };

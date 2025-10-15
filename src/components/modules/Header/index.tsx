@@ -3,10 +3,10 @@ import { NavLink } from 'react-router-dom';
 import { ROUTES } from '../../../routes';
 
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { logout } from '../../../store/auth-service/reducer';
 import { selectorGetTotalPrice } from '../../../store/cart-service/selectors';
+import { logout } from '../../../store/auth-service/actions';
 
-import Logo from '../Logo';
+import Logo from '../../elements/Logo';
 
 import Cart from '../../../assets/icons/shopping-cart.svg';
 import Logout from '../../../assets/icons/logout.svg';

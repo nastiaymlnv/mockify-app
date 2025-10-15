@@ -89,7 +89,18 @@ function ProductsPage() {
 
 	const handleAddToCart = useCallback(
 		(product: Product) => {
-			dispatch(addToCart(product as CartProduct));
+			const { id, title, description, price, images, thumbnail } = product;
+			// add to cart product with only important info
+			const cartProduct = {
+				id,
+				title,
+				description,
+				price,
+				images,
+				thumbnail,
+				...(product?.quantity && { quantity: product.quantity }),
+			};
+			dispatch(addToCart(cartProduct as CartProduct));
 		},
 		[dispatch]
 	);
@@ -122,7 +133,7 @@ function ProductsPage() {
 								<ProductCard
 									key={product.id}
 									product={product}
-									addToCart={() => handleAddToCart(product)}
+									addToCart={handleAddToCart}
 								/>
 							))}
 						</div>

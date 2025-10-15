@@ -39,14 +39,14 @@ const CartItemCard: FC<CartItemCardProps> = ({ item, deleteFromCart, changeQuant
 					<div className="flex items-center space-x-3">
 						<button
 							onClick={() => changeQuantity(item.id, item.quantity - 1)}
-							className="cursor-pointer w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
+							className="cursor-pointer w-8 h-8 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
 						>
 							-
 						</button>
 						<span className="text-gray-900 font-medium w-8 text-center">{item.quantity}</span>
 						<button
 							onClick={() => changeQuantity(item.id, item.quantity + 1)}
-							className="cursor-pointer w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
+							className="cursor-pointer w-8 h-8 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
 						>
 							+
 						</button>

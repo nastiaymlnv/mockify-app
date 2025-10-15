@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import FullPageLoader from '../elements/FullPageLoader';
-import Header from '../elements/Header';
+import Header from '../modules/Header';
 
 const MainLayout = () => {
 	return (

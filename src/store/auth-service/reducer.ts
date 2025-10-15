@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getCurrentUser, login } from './actions';
+import { getCurrentUser, login, logout } from './actions';
 
 import {
 	getCurrentUserOperation,
@@ -21,9 +21,7 @@ const initialState: AuthState = {
 const authSlice = createSlice({
 	name: 'auth',
 	initialState,
-	reducers: {
-		logout: logoutOperation,
-	},
+	reducers: {},
 	extraReducers: builder => {
 		// login
 		builder.addCase(login.pending, pendingOperation);
@@ -33,8 +31,11 @@ const authSlice = createSlice({
 		builder.addCase(getCurrentUser.pending, pendingOperation);
 		builder.addCase(getCurrentUser.fulfilled, getCurrentUserOperation);
 		builder.addCase(getCurrentUser.rejected, rejectedOperation);
+		// logout
+		builder.addCase(logout.pending, pendingOperation);
+		builder.addCase(logout.fulfilled, logoutOperation);
+		builder.addCase(logout.rejected, rejectedOperation);
 	},
 });
 
-export const { logout } = authSlice.actions;
 export default authSlice.reducer;

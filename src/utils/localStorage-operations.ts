@@ -1,4 +1,4 @@
-import type { CartProduct, Product } from '../types/products.type';
+import type { CartProduct } from '../types/products.type';
 
 export const loadCartFromStorage = (): CartProduct[] => {
 	try {
@@ -18,7 +18,7 @@ export const loadCartPriceFromStorage = (): number => {
 	}
 };
 
-export const saveToLocalStorage = (cart: Product[], totalPrice: number): void => {
+export const saveCartToLocalStorage = (cart: CartProduct[], totalPrice: number): void => {
 	try {
 		localStorage.setItem('cart', JSON.stringify(cart));
 		localStorage.setItem('cartPrice', String(totalPrice));
@@ -28,8 +28,19 @@ export const saveToLocalStorage = (cart: Product[], totalPrice: number): void =>
 	}
 };
 
+export const clearCartLocalStorageData = (): void => {
+	try {
+		localStorage.removeItem('cart');
+		localStorage.removeItem('cartPrice');
+	} catch (error) {
+		console.error('Failed to clear cart localStorage data:', error);
+		throw error;
+	}
+};
+
 export const clearLocalStorageData = (): void => {
 	try {
+		localStorage.removeItem('token');
 		localStorage.removeItem('cart');
 		localStorage.removeItem('cartPrice');
 	} catch (error) {

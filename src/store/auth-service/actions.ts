@@ -9,6 +9,8 @@ import { AUTH } from '../../api/api-urls';
 import type { UserLoginDto, UserLoginResponse } from './interfaces';
 import type { User } from '../../types/user.type';
 
+import { clearLocalStorageData } from '../../utils/localStorage-operations';
+
 export const login = createAsyncThunk<
 	UserLoginResponse, // fulfilled return type
 	UserLoginDto, // argument type
@@ -16,6 +18,7 @@ export const login = createAsyncThunk<
 >(AuthActionType.LOGIN, async (query: UserLoginDto, { rejectWithValue }) => {
 	try {
 		const { data } = await axiosInstance.post(AUTH.LOGIN, query);
+		localStorage.setItem('token', data.accessToken);
 
 		return data;
 	} catch (error: any) {
@@ -35,4 +38,9 @@ export const getCurrentUser = createAsyncThunk<
 	} catch (error: any) {
 		return rejectWithValue(error.response?.data?.message || 'Failed to get current user');
 	}
+});
+
+export const logout = createAsyncThunk(AuthActionType.LOGOUT, async () => {
+	clearLocalStorageData();
+	return;
 });

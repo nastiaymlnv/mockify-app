@@ -6,7 +6,7 @@ import { CartActionType } from '../action-types';
 import type { CartActionResponse, CartState, PlaceOrderDto } from './interfaces';
 import type { CartProduct } from '../../types/products.type';
 
-import { clearLocalStorageData, saveToLocalStorage } from '../../utils/localStorage-operations';
+import { clearCartLocalStorageData, saveCartToLocalStorage } from '../../utils/localStorage-operations';
 import { calculateTotalPrice } from '../../utils/cart-helpers';
 
 import { PRODUCTS } from '../../api/api-urls';
@@ -31,7 +31,7 @@ export const addToCart = createAsyncThunk(
 
 		const totalPrice = calculateTotalPrice(updatedCart);
 
-		saveToLocalStorage(updatedCart, totalPrice);
+		saveCartToLocalStorage(updatedCart, totalPrice);
 
 		return { cart: updatedCart, totalPrice };
 	}
@@ -46,7 +46,7 @@ export const removeFromCart = createAsyncThunk(
 		const updatedCart = store.cart.filter(item => item.id !== payload.id);
 		const totalPrice = calculateTotalPrice(updatedCart);
 
-		saveToLocalStorage(updatedCart, totalPrice);
+		saveCartToLocalStorage(updatedCart, totalPrice);
 
 		return { cart: updatedCart, totalPrice };
 	}
@@ -64,14 +64,14 @@ export const changeCartProductQuantity = createAsyncThunk(
 
 		const totalPrice = calculateTotalPrice(updatedCart);
 
-		saveToLocalStorage(updatedCart, totalPrice);
+		saveCartToLocalStorage(updatedCart, totalPrice);
 
 		return { cart: updatedCart, totalPrice };
 	}
 );
 
 export const clearCart = createAsyncThunk(CartActionType.CLEAR_CART, async () => {
-	clearLocalStorageData();
+	clearCartLocalStorageData();
 
 	return { cart: [], totalPrice: 0 };
 });
@@ -84,7 +84,7 @@ export const placeOrder = createAsyncThunk<
 	try {
 		const { data } = await axiosInstance.post(PRODUCTS.PLACE_ORDER, query);
 
-		clearLocalStorageData();
+		clearCartLocalStorageData();
 
 		return data;
 	} catch (error: any) {

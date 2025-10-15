@@ -7,18 +7,19 @@ import axiosInstance from '../../api/axios';
 import { PRODUCTS } from '../../api/api-urls';
 
 import type {
-	getProductsDto,
 	getProductsResponse,
 	GetProductsByCategoryDto,
 	GetProductsCategoriesResponse,
 	SearchProductsDto,
 } from './interfaces';
 
+import type { BaseQueryType } from '../../types/base-query.type';
+
 export const getProducts = createAsyncThunk<
 	getProductsResponse, // fulfilled return type
-	getProductsDto, // argument type
+	BaseQueryType, // argument type
 	{ rejectValue: string } // thunk API config
->(ProductsActionType.GET_PRODUCTS, async (query: getProductsDto, { rejectWithValue }) => {
+>(ProductsActionType.GET_PRODUCTS, async (query: BaseQueryType, { rejectWithValue }) => {
 	try {
 		const { data } = await axiosInstance.get(PRODUCTS.GET_PRODUCTS, { params: query });
 
