@@ -1,73 +1,141 @@
-# React + TypeScript + Vite
+# Mockify App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React application built with TypeScript, Vite, and Tailwind CSS. Other technologies: Redux Toolkit, react-hook-form, yup
 
-Currently, two official plugins are available:
+## Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+https://mockify-app.web.app/
 
-## React Compiler
+Use credentials to login from https://dummyjson.com/users.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Examples:
 
-## Expanding the ESLint configuration
+- emilys emilyspass
+- michaelw michaelwpass
+- sophiab sophiabpass
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Key Features & Benefits
 
-```js
-export default defineConfig([
-	globalIgnores(['dist']),
-	{
-		files: ['**/*.{ts,tsx}'],
-		extends: [
-			// Other configs...
+- **Modern UI:** Utilizes Tailwind CSS for a responsive and visually appealing user interface.
+- **TypeScript:** Ensures type safety and improved code maintainability.
+- **Efficient Build:** Powered by Vite for fast development and optimized production builds.
+- **API Integration:** Implements a modular API layer for seamless data fetching.
+- **Modular Structure:** Organized file structure for scalability and easy navigation.
+- **Redux Toolkit:** State management.
 
-			// Remove tseslint.configs.recommended and replace with this
-			tseslint.configs.recommendedTypeChecked,
-			// Alternatively, use this for stricter rules
-			tseslint.configs.strictTypeChecked,
-			// Optionally, add this for stylistic rules
-			tseslint.configs.stylisticTypeChecked,
+## Prerequisites & Dependencies
 
-			// Other configs...
-		],
-		languageOptions: {
-			parserOptions: {
-				project: ['./tsconfig.node.json', './tsconfig.app.json'],
-				tsconfigRootDir: import.meta.dirname,
-			},
-			// other options...
-		},
-	},
-]);
+Before you begin, ensure you have the following installed:
+
+- **Node.js:** (version >= 18 recommended) - [Download Node.js](https://nodejs.org/)
+- **npm:** (or yarn, or pnpm) - comes with Node.js
+
+## Installation & Setup Instructions
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/nastiaymlnv/mockify-app.git
+    cd mockify-app
+    ```
+
+2.  **Install dependencies:**
+
+    Using npm:
+
+    ```bash
+    npm install
+    ```
+
+    Using yarn:
+
+    ```bash
+    yarn install
+    ```
+
+    Using pnpm:
+
+    ```bash
+    pnpm install
+    ```
+
+3.  **Start the development server:**
+
+    Using npm:
+
+    ```bash
+    npm run dev
+    ```
+
+    Using yarn:
+
+    ```bash
+    yarn dev
+    ```
+
+    Using pnpm:
+
+    ```bash
+    pnpm dev
+    ```
+
+    This will start the Vite development server, typically on `http://localhost:5173/`.
+
+## Usage Examples & API Documentation
+
+### API Endpoints
+
+Fake REST API https://dummyjson.com/docs is used in the project
+
+The application uses the following API endpoints, defined in `src/api/api-urls.ts`:
+
+| Endpoint                                  | Description                              | Method | Example Usage                                                            |
+| ----------------------------------------- | ---------------------------------------- | ------ | ------------------------------------------------------------------------ |
+| `AUTH.LOGIN`                              | Authenticates a user                     | POST   | `axios.post(AUTH.LOGIN, { username, password })`                         |
+| `AUTH.GET_AUTH_USER`                      | Retrieves authenticated user information | GET    | `axios.get(AUTH.GET_AUTH_USER)`                                          |
+| `PRODUCTS.GET_PRODUCTS`                   | Retrieves all products                   | GET    | `axios.get(PRODUCTS.GET_PRODUCTS)`                                       |
+| `PRODUCTS.GET_PRODUCTS_CATEGORIES`        | Retrieves product categories             | GET    | `axios.get(PRODUCTS.GET_PRODUCTS_CATEGORIES)`                            |
+| `PRODUCTS.GET_PRODUCTS_BY_CATEGORY(name)` | Retrieves products by category name      | GET    | `axios.get(PRODUCTS.GET_PRODUCTS_BY_CATEGORY('electronics'))`            |
+| `PRODUCTS.SEARCH_PRODUCTS`                | Searches for products                    | GET    | `axios.get(PRODUCTS.SEARCH_PRODUCTS, { params: { query: 'keyboard' } })` |
+| `PRODUCTS.PLACE_ORDER`                    | Places an order                          | POST   | `axios.post(PRODUCTS.PLACE_ORDER, { orderDetails })`                     |
+
+### Code Snippets
+
+Fetching products:
+
+```typescript
+import axios from './api/axios';
+import { PRODUCTS } from './api/api-urls';
+
+const fetchProducts = async () => {
+	try {
+		const response = await axios.get(PRODUCTS.GET_PRODUCTS);
+		console.log(response.data);
+	} catch (error) {
+		console.error('Error fetching products:', error);
+	}
+};
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Configuration Options
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+- The base URL for API requests is configured in `src/api/axios.ts`. You can modify this to point to your backend API.
 
-export default defineConfig([
-	globalIgnores(['dist']),
-	{
-		files: ['**/*.{ts,tsx}'],
-		extends: [
-			// Other configs...
-			// Enable lint rules for React
-			reactX.configs['recommended-typescript'],
-			// Enable lint rules for React DOM
-			reactDom.configs.recommended,
-		],
-		languageOptions: {
-			parserOptions: {
-				project: ['./tsconfig.node.json', './tsconfig.app.json'],
-				tsconfigRootDir: import.meta.dirname,
-			},
-			// other options...
-		},
-	},
-]);
+```typescript
+import axios from 'axios';
+
+const instance = axios.create({
+	baseURL: 'YOUR_API_BASE_URL', // Replace with your API URL
+	timeout: 10000,
+});
+
+export default instance;
 ```
+
+## License Information
+
+This project is licensed under the MIT License.
+
+## Acknowledgments
+
+- This project utilizes [React](https://react.dev/), [TypeScript](https://www.typescriptlang.org/), [Vite](https://vitejs.dev/), [Tailwind CSS](https://tailwindcss.com/), [Redux Toolkit](https://redux-toolkit.js.org/), [react-hook-form](https://react-hook-form.com/) and [yup](https://www.npmjs.com/package/yup).
